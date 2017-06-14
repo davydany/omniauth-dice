@@ -16,7 +16,7 @@ describe OmniAuth::Strategies::Dice, type: :strategy do
   def full_auth_hash
     {
       "provider"=>"dice",
-      "uid"=>"cn=ruby certificate rbcert,dc=ruby-lang,dc=org",
+      "uid"=>"CN=ruby certificate rbcert,DC=ruby-lang,DC=org",
       "extra" => {
         "raw_info" => valid_user_json
       },
@@ -171,7 +171,7 @@ describe OmniAuth::Strategies::Dice, type: :strategy do
         primary_visa: 'CLOUDSDALE'
       }
       set_app!(callback_phase_opts)
-      stub_request(:get, "https://example.org:3000/dn/cn=ruby%20certificate%20rbcert,dc=ruby-lang,dc=org/info.json?issuerDn=cn=ruby%20ca,dc=ruby-lang,dc=org").
+      stub_request(:get, "https://example.org:3000/dn/CN=ruby%20certificate%20rbcert,DC=ruby-lang,DC=org/info.json?issuerDn=CN=ruby%20ca,DC=ruby-lang,DC=org").
         with(:headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'Host'=>'example.org:3000', 'User-Agent'=>/^Faraday via Ruby.*$/, 'X-Xsrf-Useprotection'=>'false'}).
       to_return(status: 200, body: valid_user_json, headers: {})
     end
@@ -208,7 +208,7 @@ describe OmniAuth::Strategies::Dice, type: :strategy do
           }
         }
         set_app!(xml_request_opts)
-        stub_request(:get, "https://example.org:3000/dn/cn=ruby%20certificate%20rbcert,dc=ruby-lang,dc=org/info.xml?issuerDn=cn=ruby%20ca,dc=ruby-lang,dc=org").
+        stub_request(:get, "https://example.org:3000/dn/CN=ruby%20certificate%20rbcert,DC=ruby-lang,DC=org/info.xml?issuerDn=CN=ruby%20ca,DC=ruby-lang,DC=org").
         with(:headers => {'Accept'=>'application/xml', 'Content-Type'=>'application/xml', 'Host'=>'example.org:3000', 'User-Agent'=>/^Faraday via Ruby.*$/, 'X-Xsrf-Useprotection'=>'false'}).
         to_return(status: 200, body: valid_user_xml, headers: {})
 
@@ -230,7 +230,7 @@ describe OmniAuth::Strategies::Dice, type: :strategy do
 
     context 'fail' do
       it 'should raise a 404 with text for a non-existent user DN' do
-        stub_request(:get, "https://example.org:3000/dn/cn=ruby%20certificate%20rbcert,dc=ruby-lang,dc=org/info.json?issuerDn=cn=ruby%20ca,dc=ruby-lang,dc=org").
+        stub_request(:get, "https://example.org:3000/dn/CN=ruby%20certificate%20rbcert,DC=ruby-lang,DC=org/info.json?issuerDn=CN=ruby%20ca,DC=ruby-lang,DC=org").
         with(:headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'Host'=>'example.org:3000', 'User-Agent'=>/^Faraday via Ruby.*$/, 'X-Xsrf-Useprotection'=>'false'}).
         to_return(status: 404, body: "User of dn:cn=ruby certificate rbcert,dc=ruby-lang,dc=org not found", headers: {})
 
