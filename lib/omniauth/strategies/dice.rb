@@ -58,7 +58,7 @@ module OmniAuth
 
       # Specifies which attributes are required arguments to initialize
       def required_params
-        %i[cas_server authentication_path]
+        %i(cas_server authentication_path)
       end
 
       # Determine if required arguments are present or fail hard
@@ -169,9 +169,9 @@ module OmniAuth
 
       # Default ['omniauth.auth']['info'] field names
       def info_defaults
-        %i[dn email firstName lastName fullName citizenshipStatus
+        %i(dn email firstName lastName fullName citizenshipStatus
            country grantBy organizations uid dutyorg visas
-           affiliations]
+           affiliations)
       end
 
       # Defualt auth_info fields
@@ -398,7 +398,7 @@ module OmniAuth
       # @param dn_str [String] The string of text you wish to parse into a DN
       # @return [DN]
       def get_dn(dn_str)
-        custom_order = %w[cn l st ou o c street dc uid]
+        custom_order = %w(cn l st ou o c street dc uid)
         default_opts = { dn_string: dn_str, string_order: custom_order }
         dnc_config = unhashie(options.dnc_options)
         DN.new(default_opts.merge(dnc_config))
