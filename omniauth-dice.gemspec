@@ -20,7 +20,7 @@ client certificates.'
   spec.test_files    = spec.files.grep(/^(test|spec|features)\//)
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 1.9.3'
+  spec.required_ruby_version = '>= 2.1.9'
 
   spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bundler'
