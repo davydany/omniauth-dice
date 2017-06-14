@@ -1,0 +1,17 @@
+before_script:
+  - 'export RAILS_ENV=test'
+
+stages:
+  - specs
+  - lint
+
+rspecs:
+  stage: specs
+  script:
+    - bundle install
+    - bundle exec rake spec
+
+rubocop:
+  stage: lint
+  script:
+    - bundle exec rake rubocop
