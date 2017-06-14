@@ -58,7 +58,7 @@ module OmniAuth
 
       # Specifies which attributes are required arguments to initialize
       def required_params
-        [:cas_server, :authentication_path]
+        %i[cas_server authentication_path]
       end
 
       # Determine if required arguments are present or fail hard
@@ -66,7 +66,7 @@ module OmniAuth
         required_params.each do |param|
           unless options.send(param)
             error_msg = "omniauth-dice error: #{param} is required"
-            fail RequiredCustomParamError, error_msg
+            raise RequiredCustomParamError, error_msg
           end
         end
       end
@@ -133,12 +133,10 @@ module OmniAuth
       def redirect_for_callback
         if options.custom_callback_url
           redirect options.custom_callback_url
+        elsif options.use_callback_url
+          redirect callback_url
         else
-          if options.use_callback_url == true
-            redirect callback_url
-          else
-            redirect callback_path
-          end
+          redirect callback_path
         end
       end
 
@@ -156,11 +154,11 @@ module OmniAuth
 
       def authenticate_user
         issuer_dn = env['omniauth.params']['issuer_dn']
-        if issuer_dn
-          response = connection.get query_url, issuerDn: issuer_dn
-        else
-          response = connection.get query_url
-        end
+        response = if issuer_dn
+                     connection.get query_url, issuerDn: issuer_dn
+                   else
+                     connection.get query_url
+                   end
         if !response || response.status.to_i >= 400
           log :error, response.inspect
           return nil
@@ -171,9 +169,9 @@ module OmniAuth
 
       # Default ['omniauth.auth']['info'] field names
       def info_defaults
-        [:dn, :email, :firstName, :lastName, :fullName, :citizenshipStatus,
-         :country, :grantBy, :organizations, :uid, :dutyorg, :visas,
-         :affiliations]
+        %i[dn email firstName lastName fullName citizenshipStatus
+           country grantBy organizations uid dutyorg visas
+           affiliations]
       end
 
       # Defualt auth_info fields
@@ -271,11 +269,11 @@ module OmniAuth
       # Reads the DN from headers
       def get_dn_from_header(type)
         headers = request.env
-        if type == 'issuer'
-          raw_dn = headers["#{options.issuer_dn_header}"]
-        else
-          raw_dn = headers["#{options.subject_dn_header}"]
-        end
+        raw_dn = if type == 'issuer'
+                   headers[options.issuer_dn_header.to_s]
+                 else
+                   headers[options.subject_dn_header.to_s]
+                 end
         log :debug, "raw_dn (#{type}) from headers: #{raw_dn}"
 
         raw_dn
@@ -283,7 +281,7 @@ module OmniAuth
 
       # Gets the DN from X509 certificate
       def get_dn_from_certificate(type)
-        cert_str = request.env["#{options.client_cert_header}"]
+        cert_str = request.env[options.client_cert_header.to_s]
         if cert_str
           client_cert = cert_str.to_cert
           log :debug, "Client certificate:\r\n#{client_cert}"
@@ -363,7 +361,7 @@ module OmniAuth
                   when 'issuer'
                     'issuer_dn'
                   else
-                    fail 'Invalid DN string type'
+                    raise 'Invalid DN string type'
                   end
         session['omniauth.params'] ||= {}
         session['omniauth.params'][dn_type] = dn_string
@@ -400,7 +398,7 @@ module OmniAuth
       # @param dn_str [String] The string of text you wish to parse into a DN
       # @return [DN]
       def get_dn(dn_str)
-        custom_order = %w(cn l st ou o c street dc uid)
+        custom_order = %w[cn l st ou o c street dc uid]
         default_opts = { dn_string: dn_str, string_order: custom_order }
         dnc_config = unhashie(options.dnc_options)
         DN.new(default_opts.merge(dnc_config))
