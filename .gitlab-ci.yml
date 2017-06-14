@@ -1,5 +1,7 @@
 before_script:
   - 'export RAILS_ENV=test'
+  - 'rvm install ruby-2.3.3'
+  - 'rvm use ruby-2.3.3'
 
 stages:
   - specs
