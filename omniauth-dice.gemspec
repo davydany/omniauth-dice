@@ -37,7 +37,7 @@ client certificates.'
   spec.add_development_dependency 'webmock', '~> 2.3.2', '< 3.0'
   spec.add_development_dependency 'yard'
 
-  spec.add_dependency 'addressable', '~> 2.4.0'
+  spec.add_dependency 'addressable', '~> 2.3'
   spec.add_dependency 'cert_munger', '~> 0.2.2', '< 1.0'
   spec.add_dependency 'dnc', '~> 0.1.9'
   spec.add_dependency 'excon', '~> 0.43'
